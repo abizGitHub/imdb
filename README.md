@@ -30,11 +30,10 @@
 
 ##### 4- to `Get a genre from the user and return best titles on each year for that genre based on number of votes and rating`
   
-   curl 'localhost:8080/api/v1/imdb/titles/year?genre=Short&page=1&size=1'  
+   curl 'localhost:8080/api/v1/imdb/titles/year?genre=Short&page=0&size=10'
   
 ##### 5- to `Count how many HTTP requests you received in this application since the last startup`
- 
-   use spring actuator
+    use spring actuator : curl http://localhost:8080/actuator/metrics/http.server.requests
 <br/>
 - all functionalities are unit-tested in : DemoApplicationTests
 
