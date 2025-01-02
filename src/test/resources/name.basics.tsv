@@ -1,0 +1,20 @@
+nconst	primaryName	birthYear	deathYear	primaryProfession	knownForTitles
+nm0000001	Fred Astaire	1899	1987	actor,miscellaneous,producer	tt0050419,tt0072308,tt0053137,tt0027125
+nm0000002	Lauren Bacall	1924	2014	actress,soundtrack,archive_footage	tt0037382,tt0075213,tt0117057,tt0038355
+nm0000003	Brigitte Bardot	1934	\N	actress,music_department,producer	tt0057345,tt0049189,tt0056404,tt0054452
+nm0000004	John Belushi	1949	1982	actor,writer,music_department	tt0072562,tt0077975,tt0080455,tt0078723
+nm0000005	Ingmar Bergman	1918	2007	writer,director,actor	tt0050986,tt0069467,tt0050976,tt0083922
+nm0000006	Ingrid Bergman	1915	1982	actress,producer,soundtrack	tt0034583,tt0038109,tt0036855,tt0038787
+nm0000007	Humphrey Bogart	1899	1957	actor,producer,miscellaneous	tt0034583,tt0037382,tt0043265,tt0042593
+nm0000008	Marlon Brando	1924	2004	actor,director,writer	tt0078788,tt0068646,tt0047296,tt0070849
+nm0000009	Richard Burton	1925	1984	actor,producer,director	tt0061184,tt0087803,tt0059749,tt0057877
+nm0317229	Myrtle Gibsone	1889	1981	script_department	tt0025380,tt0026679
+nm0317230	Nikolai Gibu	1936	\N	director,writer	tt0261093,tt0102096,tt4873336,tt4718998
+nm0317231	Gibé	1935	2010	actor	tt0189560,tt0261458,tt0423963,tt0424039
+nm0317232	Fulvio Gicca Palli	\N	\N	writer,assistant_director	tt0123909,tt0076554,tt0128447,tt0060767
+nm0317233	Lorenzo Gicca Palli	\N	\N	writer,director,actor	tt0066950,tt0067395,tt0070560,tt0125832
+nm0317235	Alisa Gichon	\N	\N	miscellaneous,producer	tt0194611,tt12138676,tt10290258,tt2554194
+nm0317236	Judith Gick	1908	2002	actress	tt0029522,tt0261938,tt0058803,tt0425448
+nm0317237	Peggy Gick	1911	2006	art_director,art_department	tt0053752,tt0037455,tt0063764,tt0027285
+nm0317238	Gerd Gickel	\N	\N	actor	tt0065436
+nm0000136	Johnny Depp	1963	\N	actor,producer,director	tt0408236,tt0325980,tt0449088,tt0367594

@@ -1,0 +1,30 @@
+spring:
+  application:
+    name: demo
+  servlet:
+    multipart:
+      max-file-size: 4GB
+      max-request-size: 4GB
+
+server:
+  port: 8080
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,metrics
+  metrics:
+    web:
+      server:
+        requests:
+          enabled: true
+app:
+  version: v1
+
+logging:
+  level:
+    root: INFO
+    org.springframework.web: INFO
+    com.myapp: TRACE
+    com.myapp.service.MyService: DEBUG
