@@ -1,5 +1,5 @@
 # IMDB
- - simple Spring-Boot application that imports dataset of IMDB and serve some APIs without any database
+ - simple Spring-Boot application that imports dataset of IMDB (can be found in https://datasets.imdbws.com/) and serve some APIs without any database
  - all imported data is stored in memory (Java object collections) and after restarting the app importing dataset is needed.
   
 
