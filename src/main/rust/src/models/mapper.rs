@@ -1,7 +1,7 @@
 use std::marker::PhantomData;
 
 pub trait FieldSettable {
-    fn set_field(&mut self, name: &str, value: String);
+    fn set_field(&mut self, name: &str, value: &str);
     fn new() -> Self;
 }
 
@@ -20,7 +20,7 @@ impl<'a, T: FieldSettable> TSVMapper<'a, T> {
         }
     }
 
-    pub fn write_to<F>(&mut self, consumer: F)
+    pub fn write_to<F>(&mut self, consumer: F) -> usize
     where
         F: Fn(T),
     {
@@ -28,23 +28,25 @@ impl<'a, T: FieldSettable> TSVMapper<'a, T> {
         lines.next().unwrap().split("\t").for_each(|h| {
             self.headers.push(h.to_string());
         });
+        let mut count = 0;
         loop {
             match lines.next() {
                 Some(row) => {
                     let entity = self.read_and_convert_row(row);
+                    count += 1;
                     consumer(entity)
                 }
-                None => break,
+                None => break count,
             }
         }
     }
 
     pub fn read_and_convert_row(&self, row: &str) -> T {
         let mut entity = T::new();
-        let mut colIx = 0;
+        let mut col_ix = 0;
         for c in row.split("\t") {
-            entity.set_field(self.headers.get(colIx).unwrap(), c.to_string());
-            colIx += 1;
+            entity.set_field(self.headers.get(col_ix).unwrap(), c);
+            col_ix += 1;
         }
         entity
     }
