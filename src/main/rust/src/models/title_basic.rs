@@ -2,8 +2,9 @@ use serde::Serialize;
 
 use crate::models::mapper::FieldSettable;
 
+
 #[derive(Debug, Default, Clone, Hash, PartialEq, PartialOrd, Eq, Serialize)]
-pub struct TitleBasics {
+pub struct TitleBasic {
     pub id: String,
     pub title_type: String,
     pub primary_title: String,
@@ -15,9 +16,9 @@ pub struct TitleBasics {
     pub genres: Vec<String>,
 }
 
-impl FieldSettable for TitleBasics {
+impl FieldSettable for TitleBasic {
     fn new() -> Self {
-        TitleBasics::default()
+        TitleBasic::default()
     }
     fn set_field(&mut self, name: &str, value: &str) {
         let str_value = value.to_string();
@@ -39,54 +40,6 @@ impl FieldSettable for TitleBasics {
             _ => {
                 panic!("no such column![{name}]")
             }
-        }
-    }
-}
-
-#[derive(Debug, Default, Clone)]
-pub struct TitleCrew {
-    pub title_id: String,
-    pub directors: Vec<String>,
-    pub writers: Vec<String>,
-}
-
-impl FieldSettable for TitleCrew {
-    fn new() -> Self {
-        TitleCrew::default()
-    }
-    fn set_field(&mut self, name: &str, value: &str) {
-        match name {
-            "tconst" => self.title_id = value.to_string(),
-            "directors" => value.trim().split("\\,").for_each(|g| {
-                self.directors.push(g.trim().to_string());
-            }),
-            "writers" => value.trim().split("\\,").for_each(|g| {
-                self.writers.push(g.trim().to_string());
-            }),
-            _ => {
-                panic!("no such column![{name}]")
-            }
-        }
-    }
-}
-
-impl TitleCrew {
-    pub fn same_director_and_writer(&self) -> bool {
-        self.directors.iter().any(|d| self.writers.contains(d))
-    }
-}
-
-#[derive(Serialize)]
-pub struct Page<T> {
-    pub content: Vec<T>,
-    pub total_record: usize,
-}
-
-impl<T> Page<T> {
-    pub fn empty() -> Self {
-        Page {
-            content: Vec::new(),
-            total_record: 0,
         }
     }
 }

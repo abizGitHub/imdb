@@ -1,5 +1,7 @@
 use std::marker::PhantomData;
 
+use serde::Serialize;
+
 pub trait FieldSettable {
     fn set_field(&mut self, name: &str, value: &str);
     fn new() -> Self;
@@ -49,5 +51,20 @@ impl<'a, T: FieldSettable> TSVMapper<'a, T> {
             col_ix += 1;
         }
         entity
+    }
+}
+
+#[derive(Serialize)]
+pub struct Page<T> {
+    pub content: Vec<T>,
+    pub total_record: usize,
+}
+
+impl<T> Page<T> {
+    pub fn empty() -> Self {
+        Page {
+            content: Vec::new(),
+            total_record: 0,
+        }
     }
 }
