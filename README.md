@@ -22,15 +22,15 @@
 
 ##### 2- to `Return all the titles in which both director and writer are the same person and he/she is still alive`
 
-   curl 'localhost:8080/api/v1/imdb/titles?sameWriterAndDirectorAndIsAlive=true' 
+http ':8080/api/v1/imdb/titles?sameWriterAndDirectorAndIsAlive=true' 
 
 ##### 3- to `Get two actors and return all the titles in which both of them played at`
-   
-   curl 'localhost:8080/api/v1/imdb/titles?actor1=name1&actor2=name2'
+
+http ':8080/api/v1/imdb/titles?actor1=Marlon Brando&actor2=Johnny Depp'
 
 ##### 4- to `Get a genre from the user and return best titles on each year for that genre based on number of votes and rating`
-  
-   curl 'localhost:8080/api/v1/imdb/titles/year?genre=Short&page=0&size=10'
+
+http ':8080/api/v1/imdb/titles/year?genre=Short&page=0&size=10'
   
 ##### 5- to `Count how many HTTP requests you received in this application since the last startup`
     use spring actuator : curl http://localhost:8080/actuator/metrics/http.server.requests

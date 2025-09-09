@@ -34,7 +34,7 @@ impl FieldSettable for TitleBasic {
                 Err(_) => {}
             },
             "runtimeMinutes" => self.runtime_minutes = value.parse().unwrap(),
-            "genres" => value.trim().split("\\,").for_each(|g| {
+            "genres" => value.trim().split(',').for_each(|g| {
                 self.genres.push(g.to_string());
             }),
             _ => {

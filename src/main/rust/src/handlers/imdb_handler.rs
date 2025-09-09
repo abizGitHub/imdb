@@ -20,7 +20,9 @@ pub fn add_title_crew(crew: TitleCrew) {
 }
 
 pub fn add_title_principal(principal: TitlePrincipal) {
-    let mut name_principal = NAME_PRINCIPAL.lock().unwrap();
+    let mut name_principal = NAME_PRINCIPAL
+        .lock()
+        .unwrap_or_else(|poisoned| poisoned.into_inner());
     match name_principal.get_mut(&principal.name_id) {
         Some(list) => {
             list.push(principal);
@@ -29,8 +31,6 @@ pub fn add_title_principal(principal: TitlePrincipal) {
             name_principal.insert(principal.name_id.clone(), vec![principal]);
         }
     };
-    let j = name_principal.get("nm0000136");
-    println!("jj {j:?}")
 }
 
 pub fn add_name_basics(name: NameBasic) {
@@ -38,12 +38,21 @@ pub fn add_name_basics(name: NameBasic) {
 }
 
 pub fn titles_with_same_crew_and_alive(size: usize, page: usize) -> Page<TitleBasic> {
-    let titles: //Vec<TitleBasic> =     ID_TITLE.lock().unwrap().values().map(|f|{f.clone()}).collect();
-    HashSet<TitleBasic> = CREW
+    let titles: HashSet<TitleBasic> = CREW
         .lock()
         .unwrap()
         .iter()
-        .filter(|c| c.same_director_and_writer())
+        .filter(|&c| {
+            let same_crew = c.same_director_and_writer();
+            if same_crew.is_empty() {
+                false
+            } else {
+                same_crew.iter().any(|c| match name_service::get_by_id(c) {
+                    Some(n) => n.death_year.is_none(),
+                    None => false,
+                })
+            }
+        })
         .filter_map(|c| title_service::get_by_id(c.title_id.as_str()))
         .collect();
 
@@ -62,18 +71,20 @@ pub fn titles_with_same_crew_and_alive(size: usize, page: usize) -> Page<TitleBa
 }
 
 pub fn common_titles(actor1: String, actor2: String, size: usize, page: usize) -> Page<TitleBasic> {
-    let name_principal = NAME_PRINCIPAL.lock().unwrap();
+    let name_principal = NAME_PRINCIPAL
+        .lock()
+        .unwrap_or_else(|poisoned| poisoned.into_inner());
 
     let principal1 = name_principal.get(
         name_service::get_by_primary_name(&actor1)
-            .expect("actor1 doesn't exist!")
+            .expect(format!("actor1[{actor1}] doesn't exist!").as_str())
             .id
             .as_str(),
     );
 
     let principal2 = name_principal.get(
         name_service::get_by_primary_name(&actor2)
-            .expect("actor2 doesn't exist!")
+            .expect(format!("actor2[{actor2}] doesn't exist!").as_str())
             .id
             .as_str(),
     );
@@ -93,7 +104,7 @@ pub fn common_titles(actor1: String, actor2: String, size: usize, page: usize) -
 
     let titles1: HashSet<String> = extract_titles(principal1);
     let titles2: HashSet<String> = extract_titles(principal2);
-
+   
     let shared_titles: HashSet<TitleBasic> = titles1
         .intersection(&titles2)
         .filter_map(|t| title_service::get_by_id(t))

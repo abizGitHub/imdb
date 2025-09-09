@@ -21,10 +21,10 @@ impl FieldSettable for NameBasic {
             "primaryName" => self.primary_name = value.to_string(),
             "birthYear" => self.birth_year = value.parse().ok(),
             "deathYear" => self.death_year = value.parse().ok(),
-            "primaryProfession" => value.trim().split("\\,").for_each(|g| {
+            "primaryProfession" => value.trim().split(',').for_each(|g| {
                 self.primary_profession.push(g.trim().to_string());
             }),
-            "knownForTitles" => value.trim().split("\\,").for_each(|g| {
+            "knownForTitles" => value.trim().split(',').for_each(|g| {
                 self.known_for_titles.push(g.trim().to_string());
             }),
             _ => {

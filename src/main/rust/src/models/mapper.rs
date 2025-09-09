@@ -47,7 +47,7 @@ impl<'a, T: FieldSettable> TSVMapper<'a, T> {
         let mut entity = T::new();
         let mut col_ix = 0;
         for c in row.split("\t") {
-            entity.set_field(self.headers.get(col_ix).unwrap(), c);
+            entity.set_field(self.headers.get(col_ix).unwrap(), c.trim());
             col_ix += 1;
         }
         entity

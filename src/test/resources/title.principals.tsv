@@ -1,16 +1,18 @@
 tconst	ordering	nconst	category	job	characters
 tt0000001	1	nm0000001	self	\N	["Self"]
-tt0000001	2	nm0005690	director	\N	\N
+tt0000001	2	nm0000008	director	\N	\N
 tt0000001	3	nm0005690	producer	producer	\N
 tt0000001	4	nm0374658	cinematographer	director of photography	\N
 tt0000002	1	nm0721526	director	\N	\N
-tt0000002	2	nm1335271	composer	\N	\N
+tt0000002	2	nm0000008	composer	actor	\N
 tt0000003	1	nm0721526	director	\N	\N
-tt0000003	2	nm1770680	producer	producer	\N
+tt0000003	2	nm0000008	producer	actor	\N
 tt0000003	3	nm0721526	producer	producer	\N
+tt0000006	1	nm0000008	actor	actor	["Man"]
+tt0000006	1	nm0000136	actor	actor	["Man"]
 tt8391714	3	nm0000136	actor	\N	["Journalist"]
 tt8884452	3	nm0000136	self	\N	["Self"]
-tt8925618	1	nm0000136	actor	\N	["Man"]
+tt8925618	1	nm0000008	actor	\N	["Man"]
 tt8925680	1	nm0000136	actor	\N	["Man"]
 tt9179096	3	nm0000136	actor	\N	["W. Eugene Smith"]
 tt9179096	17	nm0000136	producer	producer	\N
