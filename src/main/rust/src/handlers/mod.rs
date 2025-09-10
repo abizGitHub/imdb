@@ -4,3 +4,4 @@ pub mod imdb_handler;
 pub mod title_service;
 pub mod name_service;
 pub mod db;
+pub mod counter_middleware;
