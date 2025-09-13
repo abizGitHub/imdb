@@ -4,6 +4,7 @@ use crate::models::name_basic::NameBasic;
 use crate::models::title_basic::TitleBasic;
 use crate::models::title_crew::TitleCrew;
 use crate::models::title_principal::TitlePrincipal;
+use crate::models::title_rating::TitleRating;
 
 pub async fn save(file_name: &str, content: &str) -> usize {
     match file_name {
@@ -19,6 +20,9 @@ pub async fn save(file_name: &str, content: &str) -> usize {
         "name.basics.tsv" => {
             TSVMapper::<NameBasic>::new(content).write_to(imdb_handler::add_name_basics)
         }
-        _ => 0
+        "title.ratings.tsv" => {
+            TSVMapper::<TitleRating>::new(content).write_to(imdb_handler::add_title_rating)
+        }
+        _ => 0,
     }
 }

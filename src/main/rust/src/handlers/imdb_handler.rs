@@ -1,4 +1,6 @@
-use std::collections::HashSet;
+use std::collections::{HashMap, HashSet};
+
+use serde_json::Map;
 
 use crate::{
     handlers::{
@@ -6,13 +8,21 @@ use crate::{
         name_service, title_service,
     },
     models::{
-        mapper::Page, name_basic::NameBasic, title_basic::TitleBasic, title_crew::TitleCrew,
+        mapper::Page,
+        name_basic::NameBasic,
+        title_basic::TitleBasic,
+        title_crew::TitleCrew,
         title_principal::TitlePrincipal,
+        title_rating::{TitleByYear, TitleRating},
     },
 };
 
 pub fn add_title_basics(title: TitleBasic) {
     title_service::add(title);
+}
+
+pub fn add_title_rating(rating: TitleRating) {
+    title_service::add_title_rating(rating);
 }
 
 pub fn add_title_crew(crew: TitleCrew) {
@@ -104,7 +114,7 @@ pub fn common_titles(actor1: String, actor2: String, size: usize, page: usize) -
 
     let titles1: HashSet<String> = extract_titles(principal1);
     let titles2: HashSet<String> = extract_titles(principal2);
-   
+
     let shared_titles: HashSet<TitleBasic> = titles1
         .intersection(&titles2)
         .filter_map(|t| title_service::get_by_id(t))
@@ -121,5 +131,30 @@ pub fn common_titles(actor1: String, actor2: String, size: usize, page: usize) -
             .map(|c| c.clone())
             .collect::<Vec<TitleBasic>>(),
         total_record: shared_titles.len(),
+    }
+}
+
+pub fn rating_by_genre(genre: String, size: usize, page: usize) -> Page<TitleByYear> {
+    let titles = title_service::get_by_genre(&genre, size, page);
+    let mut title_by_year: HashMap<i16, Vec<TitleBasic>> = HashMap::new();
+
+    titles.content.iter().for_each(|t| {
+        title_by_year
+            .entry(t.start_year.clone())
+            .or_insert_with(|| Vec::new())
+            .push(t.clone());
+    });
+
+    let years: Vec<i16> = title_by_year.keys().map(|y| *y).collect();
+
+    Page {
+        content: years
+            .iter()
+            .map(|y| TitleByYear {
+                year: *y,
+                titles: title_by_year.remove(y).unwrap_or_default(),
+            })
+            .collect(),
+        total_record: titles.total_record,
     }
 }
