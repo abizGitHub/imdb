@@ -34,3 +34,22 @@ pub async fn titles(mut query: web::Query<HashMap<String, String>>) -> impl Resp
 
     HttpResponse::Ok().json(response)
 }
+
+pub async fn rating_by_genre(mut query: web::Query<HashMap<String, String>>) -> impl Responder {
+    let size = query
+        .remove("size")
+        .unwrap_or("10".to_string())
+        .parse()
+        .unwrap();
+    let page = query
+        .remove("page")
+        .unwrap_or("0".to_string())
+        .parse()
+        .unwrap();
+
+    let genre = query.remove("genre").unwrap();
+
+    let response = imdb_handler::rating_by_genre(genre, size, page);
+
+    HttpResponse::Ok().json(response)
+}
