@@ -6,7 +6,7 @@ use futures_util::future::{ok, LocalBoxFuture, Ready};
 use std::sync::{Arc, Mutex};
 use std::task::{Context, Poll};
 
-use crate::handlers::db::CALL_COUNTER;
+use crate::{handlers::db::CALL_COUNTER, utils::UnwrapPoisonIgnored};
 pub struct CallCounter {
     counter: Arc<Mutex<u32>>,
 }
@@ -58,7 +58,7 @@ where
     fn call(&self, req: ServiceRequest) -> Self::Future {
         // Increase the counter on each request
         {
-            let mut num = self.counter.lock().unwrap();
+            let mut num = self.counter.lock().unwrap_ignore_poison();
             *num += 1;
             //println!("API call count: {}", *num);
         }
@@ -73,7 +73,7 @@ where
 }
 
 pub async fn get_counter() -> impl Responder {
-    let c = *CALL_COUNTER.lock().unwrap();
+    let c = *CALL_COUNTER.lock().unwrap_ignore_poison();
     let msg = format!("call count:{c}");
     HttpResponse::Ok().body(msg)
 }

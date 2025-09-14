@@ -13,7 +13,7 @@ use crate::{
         title_principal::TitlePrincipal,
         title_rating::{TitleByYear, TitleRating},
     },
-    utils::Pagination,
+    utils::{Pagination, UnwrapPoisonIgnored},
 };
 
 pub fn add_title_basics(title: TitleBasic) {
@@ -25,13 +25,13 @@ pub fn add_title_rating(rating: TitleRating) {
 }
 
 pub fn add_title_crew(crew: TitleCrew) {
-    CREW.lock().unwrap().push(crew);
+    CREW.lock().unwrap_ignore_poison().push(crew);
 }
 
 pub fn add_title_principal(principal: TitlePrincipal) {
     let mut name_principal = NAME_PRINCIPAL
         .lock()
-        .unwrap_or_else(|poisoned| poisoned.into_inner());
+        .unwrap_ignore_poison();
     match name_principal.get_mut(&principal.name_id) {
         Some(list) => {
             list.push(principal);
@@ -49,7 +49,7 @@ pub fn add_name_basics(name: NameBasic) {
 pub fn titles_with_same_crew_and_alive(size: usize, page: usize) -> Page<TitleBasic> {
     let titles: HashSet<TitleBasic> = CREW
         .lock()
-        .unwrap()
+        .unwrap_ignore_poison()
         .iter()
         .filter(|&c| {
             let same_crew = c.same_director_and_writer();
@@ -71,7 +71,7 @@ pub fn titles_with_same_crew_and_alive(size: usize, page: usize) -> Page<TitleBa
 pub fn common_titles(actor1: String, actor2: String, size: usize, page: usize) -> Page<TitleBasic> {
     let name_principal = NAME_PRINCIPAL
         .lock()
-        .unwrap_or_else(|poisoned| poisoned.into_inner());
+        .unwrap_ignore_poison();
 
     let principal1 = name_principal.get(
         name_service::get_by_primary_name(&actor1)

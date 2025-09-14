@@ -3,15 +3,15 @@ use std::cmp::Ordering;
 use crate::{
     handlers::db::{GENRE_TITLE, ID_RATING, ID_TITLE},
     models::{mapper::Page, title_basic::TitleBasic, title_rating::TitleRating},
-    utils::Pagination,
+    utils::{Pagination, UnwrapPoisonIgnored},
 };
 
 pub fn add(title: TitleBasic) {
     ID_TITLE
         .lock()
-        .unwrap()
+        .unwrap_ignore_poison()
         .insert(title.id.clone(), title.clone());
-    let mut gt = GENRE_TITLE.lock().unwrap();
+    let mut gt = GENRE_TITLE.lock().unwrap_ignore_poison();
 
     title.genres.iter().for_each(|g| {
         gt.entry(g.clone())
@@ -21,7 +21,7 @@ pub fn add(title: TitleBasic) {
 }
 
 pub fn get_by_id(id: &str) -> Option<TitleBasic> {
-    match ID_TITLE.lock().unwrap().get(id) {
+    match ID_TITLE.lock().unwrap_ignore_poison().get(id) {
         Some(x) => Some(x.clone()),
         None => None,
     }
@@ -30,12 +30,12 @@ pub fn get_by_id(id: &str) -> Option<TitleBasic> {
 pub fn add_title_rating(rating: TitleRating) {
     ID_RATING
         .lock()
-        .unwrap()
+        .unwrap_ignore_poison()
         .insert(rating.title_id.clone(), rating);
 }
 
 pub fn get_by_genre(genre: &str, size: usize, page: usize) -> Page<TitleBasic> {
-    let mut titles = match GENRE_TITLE.lock().unwrap().get(genre) {
+    let mut titles = match GENRE_TITLE.lock().unwrap_ignore_poison().get(genre) {
         Some(x) => x.clone(),
         None => Vec::new(),
     };
@@ -48,7 +48,7 @@ pub fn get_by_genre(genre: &str, size: usize, page: usize) -> Page<TitleBasic> {
             Ordering::Less
         }
     };
-    let id_rating = ID_RATING.lock().unwrap();
+    let id_rating = ID_RATING.lock().unwrap_ignore_poison();
     titles.sort_by(|t1, t2| {
         let r1 = id_rating.get(&t1.id);
         let r2 = id_rating.get(&t2.id);

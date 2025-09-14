@@ -1,6 +1,27 @@
-use std::collections::HashSet;
+use std::{
+    collections::HashSet,
+    io::Error,
+    sync::{MutexGuard, PoisonError},
+};
 
 use crate::models::mapper::Page;
+
+pub trait UnwrapPoisonIgnored<'a, T> {
+    type Result;
+    type PoisonError;
+
+    fn unwrap_ignore_poison(self) -> MutexGuard<'a, T>;
+}
+
+impl<'a, T> UnwrapPoisonIgnored<'a, T>
+    for Result<MutexGuard<'a, T>, PoisonError<MutexGuard<'a, T>>>
+{
+    type PoisonError = PoisonError<T>;
+    type Result = Result<T, Error>;
+    fn unwrap_ignore_poison(self) -> MutexGuard<'a, T> {
+        self.unwrap_or_else(|poisoned| poisoned.into_inner())
+    }
+}
 
 pub trait Pagination<T: Clone> {
     fn paginate(self, page: usize, size: usize) -> Page<T>;
@@ -30,7 +51,7 @@ where
         let start_index: usize = page * size;
         let len = self.len();
         let end_index = std::cmp::min(start_index + size, len);
-   
+
         Page {
             content: self
                 .into_iter()
