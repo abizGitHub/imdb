@@ -1,9 +1,9 @@
 use std::cmp::Ordering;
 
-
 use crate::{
     handlers::db::{GENRE_TITLE, ID_RATING, ID_TITLE},
     models::{mapper::Page, title_basic::TitleBasic, title_rating::TitleRating},
+    utils::Pagination,
 };
 
 pub fn add(title: TitleBasic) {
@@ -60,17 +60,6 @@ pub fn get_by_genre(genre: &str, size: usize, page: usize) -> Page<TitleBasic> {
             rating_comp(r1.unwrap(), r2.unwrap())
         }
     });
-    let total_record = titles.len();
-    let start_index: usize = page * size;
-    let end_index = std::cmp::min(start_index + size, total_record);
 
-    Page {
-        content: titles
-            .iter()
-            .skip(start_index)
-            .take(end_index - start_index)
-            .map(|c| c.clone())
-            .collect::<Vec<TitleBasic>>(),
-        total_record: total_record,
-    }
+    titles.paginate(page, size)
 }

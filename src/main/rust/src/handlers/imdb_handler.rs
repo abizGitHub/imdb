@@ -1,7 +1,5 @@
 use std::collections::{HashMap, HashSet};
 
-use serde_json::Map;
-
 use crate::{
     handlers::{
         db::{CREW, NAME_PRINCIPAL},
@@ -15,6 +13,7 @@ use crate::{
         title_principal::TitlePrincipal,
         title_rating::{TitleByYear, TitleRating},
     },
+    utils::Pagination,
 };
 
 pub fn add_title_basics(title: TitleBasic) {
@@ -66,18 +65,7 @@ pub fn titles_with_same_crew_and_alive(size: usize, page: usize) -> Page<TitleBa
         .filter_map(|c| title_service::get_by_id(c.title_id.as_str()))
         .collect();
 
-    let start_index: usize = page * size;
-    let end_index = std::cmp::min(start_index + size, titles.len());
-
-    Page {
-        content: titles
-            .iter()
-            .skip(start_index)
-            .take(end_index - start_index)
-            .map(|c| c.clone())
-            .collect::<Vec<TitleBasic>>(),
-        total_record: titles.len(),
-    }
+    titles.paginate(page, size)
 }
 
 pub fn common_titles(actor1: String, actor2: String, size: usize, page: usize) -> Page<TitleBasic> {
@@ -120,18 +108,7 @@ pub fn common_titles(actor1: String, actor2: String, size: usize, page: usize) -
         .filter_map(|t| title_service::get_by_id(t))
         .collect();
 
-    let start_index: usize = page * size;
-    let end_index = std::cmp::min(start_index + size, shared_titles.len());
-
-    Page {
-        content: shared_titles
-            .iter()
-            .skip(start_index)
-            .take(end_index - start_index)
-            .map(|c| c.clone())
-            .collect::<Vec<TitleBasic>>(),
-        total_record: shared_titles.len(),
-    }
+    shared_titles.paginate(page, size)
 }
 
 pub fn rating_by_genre(genre: String, size: usize, page: usize) -> Page<TitleByYear> {
