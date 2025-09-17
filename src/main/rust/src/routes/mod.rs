@@ -1,8 +1,8 @@
 use actix_web::web;
 
-use crate::handlers::counter_middleware::{self, CallCounter};
+use crate::{handlers::counter_middleware::{self, CallCounter}};
 
-mod echo;
+pub mod echo;
 mod upload;
 mod title_router;
 

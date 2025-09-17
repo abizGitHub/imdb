@@ -2,7 +2,8 @@ use std::collections::HashMap;
 
 use actix_web::{web, HttpResponse, Responder};
 
-use crate::handlers::*;
+use crate::handlers::imdb_handler;
+
 
 pub async fn titles(mut query: web::Query<HashMap<String, String>>) -> impl Responder {
     let size = query

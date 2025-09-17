@@ -1,6 +1,6 @@
 use std::marker::PhantomData;
 
-use serde::Serialize;
+use serde::{Deserialize, Serialize};
 
 pub trait FieldSettable {
     fn set_field(&mut self, name: &str, value: &str);
@@ -54,7 +54,7 @@ impl<'a, T: FieldSettable> TSVMapper<'a, T> {
     }
 }
 
-#[derive(Serialize)]
+#[derive(Serialize, Deserialize)]
 pub struct Page<T> {
     pub content: Vec<T>,
     pub total_record: usize,
