@@ -1,6 +1,5 @@
 use crate::models::mapper::FieldSettable;
 
-
 #[derive(Debug, Default, Clone)]
 pub struct NameBasic {
     pub id: String,

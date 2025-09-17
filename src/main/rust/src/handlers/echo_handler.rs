@@ -1,7 +1,10 @@
 use crate::models::messages::*;
 
 pub fn process_echo(req: &EchoRequest) -> EchoResponse {
-    let echoed_lines = req.message.lines.iter()
+    let echoed_lines = req
+        .message
+        .lines
+        .iter()
         .map(|line| format!("!{}!: {}", req.from, line))
         .collect();
 

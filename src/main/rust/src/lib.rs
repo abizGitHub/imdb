@@ -1,8 +1,8 @@
 use actix_web::{App, HttpServer};
 
-pub mod routes;
 pub mod handlers;
 pub mod models;
+pub mod routes;
 pub mod utils;
 
 pub async fn start_server() -> std::io::Result<()> {

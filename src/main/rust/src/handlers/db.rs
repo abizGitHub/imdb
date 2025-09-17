@@ -1,5 +1,8 @@
 use once_cell::sync::Lazy;
-use std::{collections::HashMap, sync::{Arc, Mutex}};
+use std::{
+    collections::HashMap,
+    sync::{Arc, Mutex},
+};
 
 use crate::models::{
     name_basic::NameBasic, title_basic::TitleBasic, title_crew::TitleCrew,

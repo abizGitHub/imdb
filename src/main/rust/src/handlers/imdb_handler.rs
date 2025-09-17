@@ -29,9 +29,7 @@ pub fn add_title_crew(crew: TitleCrew) {
 }
 
 pub fn add_title_principal(principal: TitlePrincipal) {
-    let mut name_principal = NAME_PRINCIPAL
-        .lock()
-        .unwrap_ignore_poison();
+    let mut name_principal = NAME_PRINCIPAL.lock().unwrap_ignore_poison();
     match name_principal.get_mut(&principal.name_id) {
         Some(list) => {
             list.push(principal);
@@ -69,9 +67,7 @@ pub fn titles_with_same_crew_and_alive(size: usize, page: usize) -> Page<TitleBa
 }
 
 pub fn common_titles(actor1: String, actor2: String, size: usize, page: usize) -> Page<TitleBasic> {
-    let name_principal = NAME_PRINCIPAL
-        .lock()
-        .unwrap_ignore_poison();
+    let name_principal = NAME_PRINCIPAL.lock().unwrap_ignore_poison();
 
     let principal1 = name_principal.get(
         name_service::get_by_primary_name(&actor1)
