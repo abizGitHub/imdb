@@ -1,3 +1,4 @@
+use crate::errors::MyError;
 use crate::handlers::imdb_handler;
 use crate::models::mapper::TSVMapper;
 use crate::models::name_basic::NameBasic;
@@ -6,23 +7,26 @@ use crate::models::title_crew::TitleCrew;
 use crate::models::title_principal::TitlePrincipal;
 use crate::models::title_rating::TitleRating;
 
-pub async fn save(file_name: &str, content: &str) -> usize {
+pub async fn save(file_name: &str, content: &str) -> Result<usize, MyError> {
     match file_name {
         "title.basics.tsv" => {
-            TSVMapper::<TitleBasic>::new(content).write_to(imdb_handler::add_title_basics)
+            Ok(TSVMapper::<TitleBasic>::new(content).write_to(imdb_handler::add_title_basics))
         }
         "title.crew.tsv" => {
-            TSVMapper::<TitleCrew>::new(content).write_to(imdb_handler::add_title_crew)
+            Ok(TSVMapper::<TitleCrew>::new(content).write_to(imdb_handler::add_title_crew))
         }
         "title.principals.tsv" => {
-            TSVMapper::<TitlePrincipal>::new(content).write_to(imdb_handler::add_title_principal)
+            Ok(TSVMapper::<TitlePrincipal>::new(content)
+                .write_to(imdb_handler::add_title_principal))
         }
         "name.basics.tsv" => {
-            TSVMapper::<NameBasic>::new(content).write_to(imdb_handler::add_name_basics)
+            Ok(TSVMapper::<NameBasic>::new(content).write_to(imdb_handler::add_name_basics))
         }
         "title.ratings.tsv" => {
-            TSVMapper::<TitleRating>::new(content).write_to(imdb_handler::add_title_rating)
+            Ok(TSVMapper::<TitleRating>::new(content).write_to(imdb_handler::add_title_rating))
         }
-        _ => 0,
+        _ => Err(MyError::InvalidFileName {
+            file_name: file_name.to_string(),
+        }),
     }
 }

@@ -1,6 +1,7 @@
 use std::collections::{HashMap, HashSet};
 
 use crate::{
+    errors::MyError,
     handlers::{
         db::{CREW, NAME_PRINCIPAL},
         name_service, title_service,
@@ -66,25 +67,19 @@ pub fn titles_with_same_crew_and_alive(size: usize, page: usize) -> Page<TitleBa
     titles.paginate(page, size)
 }
 
-pub fn common_titles(actor1: String, actor2: String, size: usize, page: usize) -> Page<TitleBasic> {
+pub fn common_titles(
+    actor1: String,
+    actor2: String,
+    size: usize,
+    page: usize,
+) -> Result<Page<TitleBasic>, MyError> {
     let name_principal = NAME_PRINCIPAL.lock().unwrap_ignore_poison();
 
-    let principal1 = name_principal.get(
-        name_service::get_by_primary_name(&actor1)
-            .expect(format!("actor1[{actor1}] doesn't exist!").as_str())
-            .id
-            .as_str(),
-    );
-
-    let principal2 = name_principal.get(
-        name_service::get_by_primary_name(&actor2)
-            .expect(format!("actor2[{actor2}] doesn't exist!").as_str())
-            .id
-            .as_str(),
-    );
+    let principal1 = name_principal.get(name_service::get_by_primary_name(&actor1)?.id.as_str());
+    let principal2 = name_principal.get(name_service::get_by_primary_name(&actor2)?.id.as_str());
 
     if principal1.is_none() || principal2.is_none() {
-        return Page::empty();
+        return Ok(Page::empty());
     }
 
     let extract_titles = |principal: Option<&Vec<TitlePrincipal>>| -> HashSet<String> {
@@ -104,11 +99,15 @@ pub fn common_titles(actor1: String, actor2: String, size: usize, page: usize) -
         .filter_map(|t| title_service::get_by_id(t))
         .collect();
 
-    shared_titles.paginate(page, size)
+    Ok(shared_titles.paginate(page, size))
 }
 
-pub fn rating_by_genre(genre: String, size: usize, page: usize) -> Page<TitleByYear> {
-    let titles = title_service::get_by_genre(&genre, size, page);
+pub fn rating_by_genre(
+    genre: String,
+    size: usize,
+    page: usize,
+) -> Result<Page<TitleByYear>, MyError> {
+    let titles = title_service::get_by_genre(&genre, size, page)?;
     let mut title_by_year: HashMap<i16, Vec<TitleBasic>> = HashMap::new();
 
     titles.content.iter().for_each(|t| {
@@ -120,7 +119,7 @@ pub fn rating_by_genre(genre: String, size: usize, page: usize) -> Page<TitleByY
 
     let years: Vec<i16> = title_by_year.keys().map(|y| *y).collect();
 
-    Page {
+    Ok(Page {
         content: years
             .iter()
             .map(|y| TitleByYear {
@@ -129,5 +128,5 @@ pub fn rating_by_genre(genre: String, size: usize, page: usize) -> Page<TitleByY
             })
             .collect(),
         total_record: titles.total_record,
-    }
+    })
 }

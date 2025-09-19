@@ -1,6 +1,7 @@
 use std::cmp::Ordering;
 
 use crate::{
+    errors::MyError,
     handlers::db::{GENRE_TITLE, ID_RATING, ID_TITLE},
     models::{mapper::Page, title_basic::TitleBasic, title_rating::TitleRating},
     utils::{Pagination, UnwrapPoisonIgnored},
@@ -34,10 +35,14 @@ pub fn add_title_rating(rating: TitleRating) {
         .insert(rating.title_id.clone(), rating);
 }
 
-pub fn get_by_genre(genre: &str, size: usize, page: usize) -> Page<TitleBasic> {
+pub fn get_by_genre(genre: &str, size: usize, page: usize) -> Result<Page<TitleBasic>, MyError> {
     let mut titles = match GENRE_TITLE.lock().unwrap_ignore_poison().get(genre) {
         Some(x) => x.clone(),
-        None => Vec::new(),
+        None => {
+            return Err(MyError::GenreNotFound {
+                genre: genre.to_string(),
+            })
+        }
     };
     let rating_comp = |a: &TitleRating, b: &TitleRating| {
         if a.average_rating > b.average_rating {
@@ -61,5 +66,5 @@ pub fn get_by_genre(genre: &str, size: usize, page: usize) -> Page<TitleBasic> {
         }
     });
 
-    titles.paginate(page, size)
+    Ok(titles.paginate(page, size))
 }

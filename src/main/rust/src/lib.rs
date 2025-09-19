@@ -1,5 +1,6 @@
 use actix_web::{App, HttpServer};
 
+pub mod errors;
 pub mod handlers;
 pub mod models;
 pub mod routes;

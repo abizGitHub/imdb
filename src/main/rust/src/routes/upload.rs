@@ -1,5 +1,5 @@
 use actix_web::http::header;
-use actix_web::{web, HttpRequest, HttpResponse, Responder};
+use actix_web::{web, HttpRequest, HttpResponse, Responder, ResponseError};
 use futures_util::StreamExt;
 
 use crate::handlers::file_handler;
@@ -54,10 +54,12 @@ pub async fn upload_file(req: HttpRequest, mut payload: web::Payload) -> impl Re
                 None => continue,
             };
 
-            let lines =
-                file_handler::save(extract_filename(part).unwrap().as_str(), content_start).await;
-
-            return HttpResponse::Ok().body(format!("number of lines:{lines}"));
+            return match file_handler::save(extract_filename(part).unwrap().as_str(), content_start)
+                .await
+            {
+                Ok(lines) => HttpResponse::Ok().body(format!("number of lines:{}", lines)),
+                Err(e) => HttpResponse::from_error(e),
+            };
         }
     }
 

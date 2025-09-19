@@ -29,7 +29,10 @@ pub async fn titles(mut query: web::Query<HashMap<String, String>>) -> impl Resp
         if actor1.is_empty() || actor2.is_empty() {
             return HttpResponse::BadRequest().body("actor1 and actor2 could not be empty.");
         }
-        imdb_handler::common_titles(actor1, actor2, size, page)
+        match imdb_handler::common_titles(actor1, actor2, size, page) {
+            Ok(titles) => titles,
+            Err(e) => return HttpResponse::from_error(e),
+        }
     };
 
     HttpResponse::Ok().json(response)
@@ -49,7 +52,8 @@ pub async fn rating_by_genre(mut query: web::Query<HashMap<String, String>>) -> 
 
     let genre = query.remove("genre").unwrap();
 
-    let response = imdb_handler::rating_by_genre(genre, size, page);
-
-    HttpResponse::Ok().json(response)
+    match imdb_handler::rating_by_genre(genre, size, page) {
+        Ok(response) => HttpResponse::Ok().json(response),
+        Err(e) => HttpResponse::from_error(e),
+    }
 }
