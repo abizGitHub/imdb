@@ -16,7 +16,7 @@ jobs:
 
     steps:
     - name: change directory 
-      run: pwd
+      run: cd ../src/main/rust/
     - uses: actions/checkout@v4
     - name: Build
       run: cargo build --verbose
