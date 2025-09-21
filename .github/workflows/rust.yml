@@ -15,6 +15,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      run: cd src/main/rust/ 
     - uses: actions/checkout@v4
     - name: Build
       run: cargo build --verbose
