@@ -16,7 +16,7 @@ jobs:
 
     steps:
     - name: change directory 
-      run: ls -a
+      run: pwd
     - uses: actions/checkout@v4
     - name: Build
       run: cargo build --verbose
