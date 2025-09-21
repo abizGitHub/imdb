@@ -1,5 +1,5 @@
 # IMDB
- - simple Spring-Boot application that imports dataset of IMDB (can be found in https://datasets.imdbws.com/) and serve some APIs without any database
+ - simple Spring-Boot & Rust(actix_web) application that imports dataset of IMDB (can be found in https://datasets.imdbws.com/) and serve some APIs without any database
  - all imported data is stored in memory (Java object collections) and after restarting the app importing dataset is needed.
   
 
@@ -35,6 +35,6 @@ http ':8080/api/v1/imdb/titles/year?genre=Short&page=0&size=10'
 ##### 5- to `Count how many HTTP requests you received in this application since the last startup`
     use spring actuator : curl http://localhost:8080/actuator/metrics/http.server.requests
 <br/>
-- all functionalities are unit-tested in : DemoApplicationTests
+- all functionalities are unit-tested in : DemoApplicationTests(Java) & unit_test(Rust)
 
  
