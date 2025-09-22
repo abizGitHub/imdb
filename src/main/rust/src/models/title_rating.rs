@@ -1,4 +1,4 @@
-use serde::Serialize;
+use serde::{Deserialize, Serialize};
 
 use crate::models::{mapper::FieldSettable, title_basic::TitleBasic};
 
@@ -25,7 +25,7 @@ impl FieldSettable for TitleRating {
     }
 }
 
-#[derive(Debug, Default, Clone, Serialize)]
+#[derive(Debug, Default, Clone, Serialize, Deserialize, PartialEq, PartialOrd)]
 pub struct TitleByYear {
     pub year: i16,
     pub titles: Vec<TitleBasic>,

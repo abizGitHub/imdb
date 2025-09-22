@@ -1,5 +1,5 @@
 use actix_web::http::header;
-use actix_web::{web, HttpRequest, HttpResponse, Responder, ResponseError};
+use actix_web::{web, HttpRequest, HttpResponse, Responder};
 use futures_util::StreamExt;
 
 use crate::handlers::file_handler;

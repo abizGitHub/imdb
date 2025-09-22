@@ -9,7 +9,7 @@ mod tests {
     use actix_rt::System;
     use reqwest::StatusCode;
     use simple_api::{
-        models::{mapper::Page, title_basic::TitleBasic},
+        models::{mapper::Page, title_basic::TitleBasic, title_rating::TitleByYear},
         *,
     };
 
@@ -57,6 +57,56 @@ mod tests {
                 genres: vec!["Western".to_string()]
             }
         );
+    }
+
+    #[test]
+    fn titles_with_two_actors() {
+        init();
+        let client = Client::new();
+
+        let res = client
+            .get("http://localhost:8080/api/v1/imdb/titles?actor1=Marlon Brando&actor2=Johnny Depp")
+            .send()
+            .unwrap();
+
+        assert_eq!(res.status(), StatusCode::OK);
+
+        let page: Page<TitleBasic> = serde_json::from_str(res.text().unwrap().as_str()).unwrap();
+
+        assert_eq!(page.total_record, 1);
+        assert_eq!(
+            page.content.first().unwrap(),
+            &TitleBasic {
+                id: "tt0000006".to_string(),
+                title_type: "short".to_string(),
+                primary_title: "Chinese Opium Den".to_string(),
+                original_title: "Chinese Opium Den".to_string(),
+                is_adult: false,
+                start_year: 1894,
+                end_year: 0,
+                runtime_minutes: 1,
+                genres: vec!["Short".to_string()]
+            }
+        );
+    }
+
+    #[test]
+    fn genres_by_year() {
+        init();
+        let client = Client::new();
+
+        let res = client
+            .get("http://localhost:8080/api/v1/imdb/titles/year?genre=Short&page=0&size=10")
+            .send()
+            .unwrap();
+
+        assert_eq!(res.status(), StatusCode::OK);
+
+        let page: Page<TitleByYear> = serde_json::from_str(res.text().unwrap().as_str()).unwrap();
+
+        assert_eq!(page.total_record, 36);
+        assert_eq!(page.content.first().unwrap().year, 1895);
+        assert_eq!(page.content.first().unwrap().titles.len(), 8);
     }
 
     fn upload_file(filename: &str) -> String {
