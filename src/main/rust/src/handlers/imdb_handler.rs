@@ -117,8 +117,8 @@ pub fn rating_by_genre(
             .push(t.clone());
     });
 
-    let years: Vec<i16> = title_by_year.keys().map(|y| *y).collect();
-
+    let mut years: Vec<i16> = title_by_year.keys().map(|y| *y).collect();
+    years.sort();
     Ok(Page {
         content: years
             .iter()
