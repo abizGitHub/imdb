@@ -5,6 +5,7 @@ edition = "2021"
 
 
 [dependencies]
+kvds = {git = "https://github.com/abizGitHub/key-value_data-store.git", branch = "main"}
 actix-web = "4"
 reqwest = { version = "0.12.23", features = ["multipart", "blocking"] }
 regex = "1.11.1"

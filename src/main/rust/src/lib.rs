@@ -6,10 +6,10 @@ pub mod models;
 pub mod routes;
 pub mod utils;
 
-pub async fn start_server() -> std::io::Result<()> {
+pub async fn start_server(port: String) -> std::io::Result<()> {
     HttpServer::new(|| App::new().configure(routes::config))
         .workers(8)
-        .bind("127.0.0.1:8080")?
+        .bind(format!("127.0.0.1:{port}"))?
         .run()
         .await
 }

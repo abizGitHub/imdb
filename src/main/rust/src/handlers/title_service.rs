@@ -22,10 +22,7 @@ pub fn add(title: TitleBasic) {
 }
 
 pub fn get_by_id(id: &str) -> Option<TitleBasic> {
-    match ID_TITLE.lock().unwrap_ignore_poison().get(id) {
-        Some(x) => Some(x.clone()),
-        None => None,
-    }
+    ID_TITLE.lock().unwrap_ignore_poison().get(id)
 }
 
 pub fn add_title_rating(rating: TitleRating) {
