@@ -2,7 +2,7 @@ use serde::{Deserialize, Serialize};
 
 use crate::models::{mapper::FieldSettable, title_basic::TitleBasic};
 
-#[derive(Debug, Default, Clone)]
+#[derive(Debug, Default, Clone, Serialize, Deserialize)]
 pub struct TitleRating {
     pub title_id: String,
     pub average_rating: f32,

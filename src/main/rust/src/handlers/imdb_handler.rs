@@ -31,9 +31,11 @@ pub fn add_title_crew(crew: TitleCrew) {
 
 pub fn add_title_principal(principal: TitlePrincipal) {
     let mut name_principal = NAME_PRINCIPAL.lock().unwrap_ignore_poison();
-    match name_principal.get_mut(&principal.name_id) {
-        Some(list) => {
+    match name_principal.get(&principal.name_id) {
+        Some(mut list) => {
+            let name_id = principal.name_id.clone();
             list.push(principal);
+            name_principal.insert(name_id, list);
         }
         None => {
             name_principal.insert(principal.name_id.clone(), vec![principal]);
@@ -82,7 +84,7 @@ pub fn common_titles(
         return Ok(Page::empty());
     }
 
-    let extract_titles = |principal: Option<&Vec<TitlePrincipal>>| -> HashSet<String> {
+    let extract_titles = |principal: Option<Vec<TitlePrincipal>>| -> HashSet<String> {
         principal
             .unwrap()
             .iter()

@@ -6,7 +6,6 @@ use serde_json::{self};
 
 use std::{
     collections::HashMap,
-    env,
     sync::{Arc, Mutex},
 };
 
@@ -15,13 +14,29 @@ use crate::models::{
     title_principal::TitlePrincipal, title_rating::TitleRating,
 };
 
-pub const STORE_INTERNALLY: &str = "STORE-INTERNALLY";
+pub static STORE_INTERNALLY: Lazy<Mutex<bool>> = Lazy::new(|| Mutex::new(true));
 
-pub const DB_URL: &str = "DB-URL";
+pub static DB_URL: Lazy<Mutex<String>> = Lazy::new(|| Mutex::new("127.0.0.1:6379".to_string()));
 
 pub static ID_TITLE: Lazy<Mutex<MapStorage<TitleBasic>>> =
     Lazy::new(|| Mutex::new(MapStorage::new()));
 
+pub static ID_NAME: Lazy<Mutex<MapStorage<NameBasic>>> =
+    Lazy::new(|| Mutex::new(MapStorage::new()));
+
+pub static PRIMARY_NAME: Lazy<Mutex<MapStorage<NameBasic>>> =
+    Lazy::new(|| Mutex::new(MapStorage::new()));
+
+pub static NAME_PRINCIPAL: Lazy<Mutex<MapStorage<Vec<TitlePrincipal>>>> =
+    Lazy::new(|| Mutex::new(MapStorage::new()));
+
+pub static ID_RATING: Lazy<Mutex<MapStorage<TitleRating>>> =
+    Lazy::new(|| Mutex::new(MapStorage::new()));
+
+pub static GENRE_TITLE: Lazy<Mutex<MapStorage<Vec<TitleBasic>>>> =
+    Lazy::new(|| Mutex::new(MapStorage::new()));
+
+#[derive(Debug)]
 pub struct MapStorage<T> {
     map: HashMap<String, T>,
     internal: bool,
@@ -34,7 +49,7 @@ where
     T: serde::de::DeserializeOwned + Clone + Serialize,
 {
     pub fn new() -> Self {
-        let is_internal = env::var(STORE_INTERNALLY).unwrap() == "true";
+        let is_internal = *STORE_INTERNALLY.lock().unwrap();
         MapStorage {
             map: HashMap::new(),
             internal: is_internal,
@@ -46,7 +61,9 @@ where
             connector: if is_internal {
                 None
             } else {
-                Some(Box::new(Connector::with_url(env::var(DB_URL).unwrap().as_str())))
+                Some(Box::new(Connector::with_url(
+                    &*DB_URL.lock().unwrap().as_str(),
+                )))
             },
         }
     }
@@ -81,21 +98,6 @@ where
     }
 }
 
-pub static ID_NAME: Lazy<Mutex<HashMap<String, NameBasic>>> =
-    Lazy::new(|| Mutex::new(HashMap::new()));
-
-pub static PRIMARY_NAME: Lazy<Mutex<HashMap<String, NameBasic>>> =
-    Lazy::new(|| Mutex::new(HashMap::new()));
-
 pub static CREW: Lazy<Mutex<Vec<TitleCrew>>> = Lazy::new(|| Mutex::new(Vec::new()));
-
-pub static NAME_PRINCIPAL: Lazy<Mutex<HashMap<String, Vec<TitlePrincipal>>>> =
-    Lazy::new(|| Mutex::new(HashMap::new()));
-
-pub static ID_RATING: Lazy<Mutex<HashMap<String, TitleRating>>> =
-    Lazy::new(|| Mutex::new(HashMap::new()));
-
-pub static GENRE_TITLE: Lazy<Mutex<HashMap<String, Vec<TitleBasic>>>> =
-    Lazy::new(|| Mutex::new(HashMap::new()));
 
 pub static CALL_COUNTER: Lazy<Arc<Mutex<u32>>> = Lazy::new(|| Arc::new(Mutex::new(0)));

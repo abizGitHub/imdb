@@ -1,6 +1,8 @@
+use serde::{Deserialize, Serialize};
+
 use crate::models::mapper::FieldSettable;
 
-#[derive(Debug, Default, Clone)]
+#[derive(Debug, Default, Clone, Serialize, Deserialize)]
 pub struct NameBasic {
     pub id: String,
     pub primary_name: String,

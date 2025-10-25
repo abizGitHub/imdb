@@ -12,12 +12,19 @@ pub fn add(title: TitleBasic) {
         .lock()
         .unwrap_ignore_poison()
         .insert(title.id.clone(), title.clone());
+
     let mut gt = GENRE_TITLE.lock().unwrap_ignore_poison();
 
     title.genres.iter().for_each(|g| {
-        gt.entry(g.clone())
-            .or_insert(Vec::new())
-            .push(title.clone());
+        if let None = gt.get(g) {
+            gt.insert(g.to_string(), Vec::new());
+        }
+        let mut titles = match gt.get(g) {
+            Some(v) => v,
+            None => Vec::new(),
+        };
+        titles.push(title.clone());
+        gt.insert(g.to_string(), titles);
     });
 }
 
@@ -41,7 +48,7 @@ pub fn get_by_genre(genre: &str, size: usize, page: usize) -> Result<Page<TitleB
             })
         }
     };
-    let rating_comp = |a: &TitleRating, b: &TitleRating| {
+    let rating_comp = |a: TitleRating, b: TitleRating| {
         if a.average_rating > b.average_rating {
             Ordering::Greater
         } else if a.average_rating < b.average_rating {
