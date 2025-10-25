@@ -46,7 +46,7 @@ where
             connector: if is_internal {
                 None
             } else {
-                Some(Box::new(Connector::with_url(DB_URL)))
+                Some(Box::new(Connector::with_url(env::var(DB_URL).unwrap().as_str())))
             },
         }
     }
