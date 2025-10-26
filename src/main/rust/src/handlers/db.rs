@@ -33,7 +33,7 @@ pub static NAME_PRINCIPAL: Lazy<Mutex<MapStorage<Vec<TitlePrincipal>>>> =
 pub static ID_RATING: Lazy<Mutex<MapStorage<TitleRating>>> =
     Lazy::new(|| Mutex::new(MapStorage::new()));
 
-pub static GENRE_TITLE: Lazy<Mutex<MapStorage<Vec<TitleBasic>>>> =
+pub static GENRE_TITLE: Lazy<Mutex<MapStorage<Vec<String>>>> =
     Lazy::new(|| Mutex::new(MapStorage::new()));
 
 #[derive(Debug)]

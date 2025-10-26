@@ -27,12 +27,12 @@ impl FieldSettable for TitleBasic {
             "primaryTitle" => self.primary_title = str_value,
             "originalTitle" => self.original_title = str_value,
             "isAdult" => self.is_adult = value == "1",
-            "startYear" => self.start_year = value.parse().unwrap(),
+            "startYear" => self.start_year = value.parse().unwrap_or_default(),
             "endYear" => match value.parse() {
                 Ok(ey) => self.end_year = ey,
                 Err(_) => {}
             },
-            "runtimeMinutes" => self.runtime_minutes = value.parse().unwrap(),
+            "runtimeMinutes" => self.runtime_minutes = value.parse().unwrap_or_default(),
             "genres" => value.trim().split(',').for_each(|g| {
                 self.genres.push(g.to_string());
             }),

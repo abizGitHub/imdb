@@ -23,7 +23,7 @@ pub fn add(title: TitleBasic) {
             Some(v) => v,
             None => Vec::new(),
         };
-        titles.push(title.clone());
+        titles.push(title.id.clone());
         gt.insert(g.to_string(), titles);
     });
 }
@@ -59,8 +59,8 @@ pub fn get_by_genre(genre: &str, size: usize, page: usize) -> Result<Page<TitleB
     };
     let id_rating = ID_RATING.lock().unwrap_ignore_poison();
     titles.sort_by(|t1, t2| {
-        let r1 = id_rating.get(&t1.id);
-        let r2 = id_rating.get(&t2.id);
+        let r1 = id_rating.get(&t1);
+        let r2 = id_rating.get(&t2);
         if r1.is_none() {
             Ordering::Less
         } else if r2.is_none() {
@@ -70,5 +70,9 @@ pub fn get_by_genre(genre: &str, size: usize, page: usize) -> Result<Page<TitleB
         }
     });
 
-    Ok(titles.paginate(page, size))
+    Ok(titles
+        .iter()
+        .map(|tid| get_by_id(&tid).unwrap())
+        .collect::<Vec<TitleBasic>>()
+        .paginate(page, size))
 }
