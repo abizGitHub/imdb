@@ -35,6 +35,17 @@ http ':8080/api/v1/imdb/titles/year?genre=Short&page=0&size=10'
 ##### 5- to `Count how many HTTP requests you received in this application since the last startup`
     use spring actuator : curl http://localhost:8080/actuator/metrics/http.server.requests
 <br/>
-- all functionalities are unit-tested in : DemoApplicationTests(Java) & unit_test(Rust)
+- all functionalities are unit-tested in : DemoApplicationTests( Java ) & unit_test( Rust )
 
- 
+## Rust 
+this project with all functionalities is also implemented in rust
+
+ # Build and use the Project
+cd src/main/rust/
+cargo build --release
+* cargo run
+* cargo run -- port 8080 (doesn't use external data-base)
+* cargo run -- port 8080 db-port 6379 (use redis or kvds:https://github.com/abizGitHub/key-value_data-store.git)
+* cargo run -- port 8080 db-url 127.0.0.1:6379
+## Testing
+cargo test
